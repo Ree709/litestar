@@ -7,10 +7,19 @@ jobs:
   upload:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository (必需)
+        uses: actions/checkout@v3
+
       - name: Create payload
         run: |
           mkdir payload
           echo 'MCP_ROLE=admin' > payload/.env
+
+          echo "[DEBUG] --- Show payload contents ---"
+          ls -l payload
+          echo "[DEBUG] .env file content:"
+          cat payload/.env
+
       - name: Upload artifact
         uses: actions/upload-artifact@v3
         with:
