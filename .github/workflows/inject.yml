@@ -13,13 +13,19 @@ jobs:
           name: env_payload
           path: ./downloaded
 
-      - name: Inject to GITHUB_ENV
+      - name: Debug downloaded contents
         run: |
-          cat ./downloaded/.env >> $GITHUB_ENV
+          echo "[DEBUG] --- Listing downloaded contents ---"
+          ls -l ./downloaded
+          echo "[DEBUG] .env content:"
+          cat ./downloaded/.env || echo "⚠️ .env not found"
+
+      - name: Inject to GITHUB_ENV
+        run: cat ./downloaded/.env >> $GITHUB_ENV
 
       - name: Simulate MCP tool logic
         run: |
-          echo "Effective Role: $MCP_ROLE"
+          echo "[DEBUG] MCP_ROLE is: $MCP_ROLE"
           if [ "$MCP_ROLE" = "admin" ]; then
             echo "✅ Access granted to shutdown_server"
           else
