@@ -1,0 +1,27 @@
+name: Inject environment and test
+
+on:
+  workflow_dispatch:
+
+jobs:
+  inject:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: env_payload
+          path: ./downloaded
+
+      - name: Inject to GITHUB_ENV
+        run: |
+          cat ./downloaded/.env >> $GITHUB_ENV
+
+      - name: Simulate MCP tool logic
+        run: |
+          echo "Effective Role: $MCP_ROLE"
+          if [ "$MCP_ROLE" = "admin" ]; then
+            echo "✅ Access granted to shutdown_server"
+          else
+            echo "❌ Access denied"
+          fi
